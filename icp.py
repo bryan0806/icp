@@ -79,7 +79,9 @@ def icp(A, B, init_pose=None, max_iterations=20, tolerance=0.001):
         distances: Euclidean distances (errors) of the nearest neighbor
         i: number of iterations to converge
     '''
-
+    #tolerance = 0.001
+    #max_iterations=20
+    #init_pose = None
     assert A.shape == B.shape
 
     # get number of dimensions
@@ -117,3 +119,18 @@ def icp(A, B, init_pose=None, max_iterations=20, tolerance=0.001):
     T,_,_ = best_fit_transform(A, src[:m,:].T)
 
     return T, distances, i
+
+
+if __name__ == "__main__":
+    A = np.random.randint(0,101,(20,3))    # 20 points for test
+    
+    rotz = lambda theta: np.array([[np.cos(theta),-np.sin(theta),0],
+                                       [np.sin(theta),np.cos(theta),0],
+                                       [0,0,1]])
+    trans = np.array([2.12,-0.2,1.3])
+    B = A.dot(rotz(np.pi/4).T) + trans
+    print(B)
+    T, distances,i = icp(A, B)
+
+    np.set_printoptions(precision=3,suppress=True)
+    print(T)
